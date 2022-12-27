@@ -83,7 +83,14 @@ jobs:
             
        # this step to configuire App Service...
           
-          
+       # Cosmos Db
+      - name: Azure cosmosdb create
+        uses: Azure/cli@v1
+        with:
+          # Specify the script here
+          inlineScript:
+            az cosmosdb create --name cosdb-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
+
           
        # Deploy Bicep file
       - name: Deploy App Service Plan
@@ -115,14 +122,7 @@ jobs:
           inlineScript:
              az webapp vnet-integration add -g rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} -n wapp-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --vnet /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}/providers/Microsoft.Network/virtualNetworks/vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}/providers/Microsoft.Network/virtualNetworks/vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke/subnets/appsrv-subnet
           
-      # Cosmos Db
-      - name: Azure cosmosdb create
-        uses: Azure/cli@v1
-        with:
-          # Specify the script here
-          inlineScript:
-            az cosmosdb create --name cosdb-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
-
+     
         
 
           
