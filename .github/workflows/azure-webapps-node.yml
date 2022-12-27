@@ -101,7 +101,7 @@ jobs:
         with:
           inlineScript:
           # Specify the script here
-            az network vnet subnet update --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}/providers/Microsoft.Network/virtualNetworks/vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --name /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}/providers/Microsoft.Network/virtualNetworks/vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke/subnets/backend-subnet --service-endpoints "Microsoft.Storage"
+            az network vnet subnet update --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --name backend-subnet --service-endpoints "Microsoft.Storage"
 
 
             
