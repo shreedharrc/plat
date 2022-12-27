@@ -67,8 +67,7 @@ jobs:
           # Specify the script here
           inlineScript:
             az cosmosdb create --name ${{ env.cosdb-account-name }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual
-            az cosmosdb mongodb database create -a ${{ env.cosdb-account-name }} -n  ${{ env.cosdb-name }} -g rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}}                     
-
+            az cosmosdb database create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --name  ${{ env.cosdb-account-name }} --db-name ${{ env.cosdb-name }} --throughput 400
 
        
              # Deploy vnet spoke.............
