@@ -89,7 +89,7 @@ jobs:
         with:
           # Specify the script here
           inlineScript:
-            az cosmosdb create --name cosdb-account-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --resource-group $resourceGroup
+            az cosmosdb create --name cosdb-account-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}
             az cosmosdb sql database create --name cosdb-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --account-name cosdb-account-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}
 
 
