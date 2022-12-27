@@ -28,6 +28,7 @@ jobs:
       linuxFxVersion : "node|14-lts"
       cosdb-account-name : "cosdb-account" 
       cosdb-name : "cosdb"
+      storage-account : "blob-store"
 
     steps:
     
@@ -60,6 +61,15 @@ jobs:
              #!/bin/bash
                az group create --name rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --tags "type=${{ env.type }}" "ApplicationType=${{ env.Appplicationtype }}"
 
+      # Storage
+      - name: Azure CLI Action
+        uses: Azure/cli@v1
+        with:
+          # Specify the script here
+          inlineScript: 
+            az storage account create --name ${{ env.storage-account }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --location ${{ env.storage-account }} --sku Standard_ZRS --encryption-services blob
+    
+    
            # Cosmos Db
       - name: Azure cosmosdb create
         uses: Azure/cli@v1
