@@ -66,7 +66,7 @@ jobs:
           # Specify the script here
           inlineScript:
             az cosmosdb mongodb database create --account-name cosdb-account --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --name cos-db
-            az create --name shree --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual --enable-automatic-failover true --locations regionName=${{ env.ResourceGroupLocation }} failoverPriority=0 isZoneRedundant=False            
+            az cosmosdb create --name shree --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual --enable-automatic-failover true --locations regionName=${{ env.ResourceGroupLocation }} failoverPriority=0 isZoneRedundant=False            
 
 
        
