@@ -66,8 +66,8 @@ jobs:
         with:
           # Specify the script here
           inlineScript:
-            az cosmosdb create --name ${{ env.cosdb-account-name }}-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual
-            az cosmosdb mongodb database create --account-name ${{ env.cosdb-account-name }}-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --name ${{ env.cosdb-name }}
+            az cosmosdb create --name ${{ env.cosdb-account-name }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual
+            az cosmosdb mongodb database create --account-name ${{ env.cosdb-account-name }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --name ${{ env.cosdb-name }}
                         
 
 
