@@ -67,7 +67,7 @@ jobs:
         with:
           # Specify the script here
           inlineScript: 
-            az storage account create --name ${{ env.storage-account }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --location ${{ env.storage-account }} --sku Standard_ZRS --encryption-services blob
+            az storage account create --name ${{ env.storage-account }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --sku Standard_ZRS --encryption-services blob
     
     
            # Cosmos Db
