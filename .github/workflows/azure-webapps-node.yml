@@ -59,7 +59,17 @@ jobs:
              #!/bin/bash
                az group create --name rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --tags "type=${{ env.type }}" "ApplicationType=${{ env.Appplicationtype }}"
 
+           # Cosmos Db
+      - name: Azure cosmosdb create
+        uses: Azure/cli@v1
+        with:
+          # Specify the script here
+          inlineScript:
+            az cosmosdb mongodb database create --account-name cosdb-account --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --name cos-db
+            create --name shree --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual --enable-automatic-failover true --locations regionName=${{ env.ResourceGroupLocation }} failoverPriority=0 isZoneRedundant=False            
 
+
+       
              # Deploy vnet spoke.............
       - name: Deploy Spoke vNet infrastructure 
         uses: azure/arm-deploy@v1
@@ -83,17 +93,7 @@ jobs:
             
        # this step to configuire App Service...
           
-       # Cosmos Db
-      - name: Azure cosmosdb create
-        uses: Azure/cli@v1
-        with:
-          # Specify the script here
-          inlineScript:
-            az cosmosdb mongodb database create --account-name cosdb-account --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --name cos-db
-            az cosmosdb create --name cosdb-account --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual --locations regionName = ${{ env.ResourceGroupLocation }} failoverPriority=0 isZoneRedundant=False            
-
-
-          
+   
        # Deploy Bicep file
       - name: Deploy App Service Plan
         uses: azure/arm-deploy@v1
