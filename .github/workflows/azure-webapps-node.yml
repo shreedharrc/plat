@@ -89,8 +89,8 @@ jobs:
         with:
           # Specify the script here
           inlineScript:
-            az cosmosdb create --name cosdb-account-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}
-            az cosmosdb sql database create --name cosdb-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --account-name cosdb-account-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}
+            az cosmosdb mongodb database create --account-name cosdb-account --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --name cos-db
+            az cosmosdb create --name cosdb-account --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual --locations regionName = ${{ env.ResourceGroupLocation }} failoverPriority=0 isZoneRedundant=False            
 
 
           
