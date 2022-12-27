@@ -26,7 +26,8 @@ jobs:
       appID: "test-shree"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
-      
+      cosdb-account-name : "cosdb-account" 
+      cosdb-name : "cosdb"
 
     steps:
     
@@ -65,8 +66,9 @@ jobs:
         with:
           # Specify the script here
           inlineScript:
-            az cosmosdb mongodb database create --account-name cosdb-account --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --name cos-db
-            az cosmosdb create --name shree --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual --enable-automatic-failover true --locations regionName=${{ env.ResourceGroupLocation }} failoverPriority=0 isZoneRedundant=False            
+            az cosmosdb create --name ${{ env.cosdb-account-name }}-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --kind MongoDB --server-version 4.0 --default-consistency-level Eventual --enable-automatic-failover true --locations regionName=${{ env.ResourceGroupLocation }} failoverPriority=0 isZoneRedundant=False
+            az cosmosdb mongodb database create --account-name ${{ env.cosdb-account-name }}-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-${{ env.Applicationname }}-${{env.appID}} --name ${{ env.cosdb-name }}
+                        
 
 
        
