@@ -69,9 +69,9 @@ jobs:
         uses: Azure/cli@v1
         with:
           # Specify the script here
-          inlineScript:
+          inlineScript: |
             az storage account create --name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --sku Standard_ZRS
-            az storage container create --name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }}
+            az storage container create --name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }}
       
        
              # Deploy vnet spoke.............
