@@ -72,7 +72,18 @@ jobs:
           inlineScript: |
             az storage account create --name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --sku Standard_ZRS
             az storage container create --name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }}       
-             # Deploy vnet spoke.............
+       
+       # Cosmos-db creation
+      - name: Azure Cosmos-db creation
+        uses: Azure/cli@v1
+        with:
+          # Specify the script here
+          inlineScript: | 
+            az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB --capabilities EnableAggregationPipeline --default-consistency-level "Strong" 
+            az cosmosdb database create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --db-name ${{ env.cosdb-name }} --throughput 400  
+            
+            
+          # Deploy vnet spoke.............
       - name: Deploy Spoke vNet infrastructure 
         uses: azure/arm-deploy@v1
         with:
