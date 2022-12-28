@@ -23,12 +23,12 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test-asa1"
+      appID: "test-asa2"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-accountasa1" 
+      cosdb-account-name : "cosdb-accountasa2" 
       cosdb-name : "cosdbsss"
-      storage-account : "blobstoreasa1"
+      storage-account : "blobstoreasa2"
 
     steps:
     
@@ -110,7 +110,7 @@ jobs:
         with:
           # Specify the script here
           inlineScript: | 
-                az cosmosdb network-rule add -n ${{ env.cosdb-account-name }} -g rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --ignore-missing-vnet-service-endpoint true
+                az cosmosdb network-rule add -n ${{ env.cosdb-account-name }} -g rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --ignore-missing-vnet-service-endpoint true
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-ids MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
                 az cosmosdb network-rule add -n ${{ env.cosdb-account-name }} -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet --ignore-missing-vnet-service-endpoint true
                 az network vnet subnet update -n $backend-subnet -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --service-endpoints Microsoft.AzureCosmosDB
