@@ -72,7 +72,7 @@ jobs:
           inlineScript: |
             az storage account create --name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --sku Standard_ZRS
             az storage container create --name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }}
-            az storage account private-endpoint-connection approve -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --name priv-endpoint-blob
+            az storage account private-endpoint-connection approve -g rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --name priv-endpoint-blob
 
        
              # Deploy vnet spoke.............
