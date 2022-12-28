@@ -43,6 +43,9 @@ jobs:
             tenant-id: ${{ secrets.AZURE_TENANT_ID }}
             subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
             enable-AzPSSession: true
+            
+            
+      
 
       
       - name: Azure CLI Action
@@ -61,6 +64,14 @@ jobs:
              #!/bin/bash
                az group create --name rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --tags "type=${{ env.type }}" "ApplicationType=${{ env.Appplicationtype }}"
 
+        # Storage creation
+      - name: Azure Blob creation
+        uses: Azure/cli@v1
+        with:
+          # Specify the script here
+          inlineScript:
+            az storage account create --name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --sku Standard_ZRS
+            az storage container create --name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} 
       
        
              # Deploy vnet spoke.............
@@ -86,15 +97,7 @@ jobs:
           parameters: "name=vnet-${{ env.companybbr }}-${{ env.envtype }}"
           failOnStdErr: false
           
-    # Storage creation
-      - name: Azure Blob creation
-        uses: Azure/cli@v1
-        with:
-          # Specify the script here
-          inlineScript:
-            az storage account create --name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --sku Standard_ZRS
-            az storage container create --name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --public-access container --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} 
-
+    
           
     # Vnet Intergration and enabling service connection to Blob storage and backend vnet 
       - name: Vnet Intergration and enabling service connection to Blob storage and backend vnet 
