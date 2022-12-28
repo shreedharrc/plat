@@ -112,7 +112,6 @@ jobs:
           # Specify the script here
           inlineScript: | 
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-ids MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
-                az cosmosdb network-rule add -n ${{ env.cosdb-account-name }} -g rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet --ignore-missing-vnet-service-endpoint true
                 az network vnet subnet update -n $backend-subnet -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --service-endpoints Microsoft.AzureCosmosDB
           
     # Vnet Intergration and enabling service connection to Blob storage and backend vnet 
