@@ -91,9 +91,11 @@ jobs:
         uses: Azure/cli@v1
         with:
           # Specify the script here
-          inlineScript: 
+          inlineScript:
+            echo "blob-test" > file.txt  
             az storage account create --name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --sku Standard_ZRS --encryption-services blob
-    
+            az storage container create --name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --public-access container --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} storage blob upload --file C:\test.txt --container-name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --name blobcli --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }}
+
           
     # Vnet Intergration and enabling service connection to Blob storage and backend vnet 
       - name: Vnet Intergration and enabling service connection to Blob storage and backend vnet 
