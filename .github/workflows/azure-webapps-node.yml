@@ -23,12 +23,12 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test-asa3"
+      appID: "test-asa4"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-accountasa3" 
-      cosdb-name : "cosdbsss3"
-      storage-account : "blobstoreasa3"
+      cosdb-account-name : "cosdb-accountasa4" 
+      cosdb-name : "cosdbsss4"
+      storage-account : "blobstoreasa4"
 
     steps:
     
