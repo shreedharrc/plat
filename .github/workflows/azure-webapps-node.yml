@@ -72,8 +72,7 @@ jobs:
           inlineScript: |
             az storage account create --name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --sku Standard_ZRS
             az storage container create --name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }}
-            id = az storage account show -n ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --query "privateEndpointConnections[0].id"
-            az storage account private-endpoint-connection approve --id $id
+            az storage account private-link-resource list --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}
        
              # Deploy vnet spoke.............
       - name: Deploy Spoke vNet infrastructure 
