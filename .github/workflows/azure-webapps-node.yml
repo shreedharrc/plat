@@ -23,12 +23,13 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test"
+      appID: "testa1"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-account" 
-      cosdb-name : "cosdb"
-      storage-account : "blobstore"
+      cosdb-account-name : "cosdb-accounta1" 
+      cosdb-name : "cosdba1"
+      storage-account : "blobstorea1"
+      zoneName : "privatelink.documents.azure.com"
 
     steps:
     
@@ -112,8 +113,9 @@ jobs:
           # Specify the script here
           inlineScript: | 
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-ids MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
-                az network vnet subnet update --name $backend-subnet -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --service-endpoints Microsoft.AzureCosmosDB
-          
+                az network private-dns zone create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name ${{ env.zoneName }}  
+                az network private-dns link vnet create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --zone-name  ${{ env.zoneName }} --name myzonelink --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --registration-enabled false 
+                az network private-endpoint dns-zone-group create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --endpoint-name  Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name "MyPrivateZoneGroup" --private-dns-zone ${{ env.zoneName }}   --zone-name "myzone"          
     # Vnet Intergration and enabling service connection to Blob storage and backend vnet 
       - name: Vnet Intergration and enabling service connection to Blob storage and backend vnet 
         uses: Azure/cli@v1
