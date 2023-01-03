@@ -23,7 +23,7 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "testa7"
+      appID: "testa9"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
       cosdb-account-name : "cosdb-accounta9" 
