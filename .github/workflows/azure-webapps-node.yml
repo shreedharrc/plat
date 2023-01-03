@@ -23,12 +23,12 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "testa4"
+      appID: "testa5"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-accounta4" 
-      cosdb-name : "cosdba4"
-      storage-account : "blobstorea4"
+      cosdb-account-name : "cosdb-accounta5" 
+      cosdb-name : "cosdba5"
+      storage-account : "blobstorea5"
       zoneName : "privatelink.documents.azure.com"
 
     steps:
@@ -112,7 +112,7 @@ jobs:
         with:
           # Specify the script here
           inlineScript: | 
-                svcEndpoint=$(az network vnet subnet show --resource-group $resourceGroup --name $backEnd --vnet-name $vNet --query 'id' -o tsv)
+                svcEndpoint=$(az network vnet subnet show --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name backend-subnet --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --query 'id' -o tsv)
                 az cosmosdb network-rule add --name ${{ env.cosdb-account-name }} --subnet $svcEndpoint --ignore-missing-vnet-service-endpoint true
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-ids MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
                 az network private-dns zone create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name ${{ env.zoneName }}  
