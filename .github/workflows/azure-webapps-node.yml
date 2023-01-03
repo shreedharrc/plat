@@ -23,12 +23,12 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "testa3"
+      appID: "testa4"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-accounta3" 
-      cosdb-name : "cosdba3"
-      storage-account : "blobstorea3"
+      cosdb-account-name : "cosdb-accounta4" 
+      cosdb-name : "cosdba4"
+      storage-account : "blobstorea4"
       zoneName : "privatelink.documents.azure.com"
 
     steps:
@@ -80,7 +80,7 @@ jobs:
         with:
           # Specify the script here
           inlineScript: | 
-            az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB --capabilities EnableAggregationPipeline --default-consistency-level "Strong" --enable-virtual-network --enable-public-network true
+            az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB --capabilities EnableAggregationPipeline --default-consistency-level "Strong" --enable-public-network true
             az cosmosdb database create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --db-name ${{ env.cosdb-name }} --throughput 400  
             
       # Deploy vnet spoke.............
