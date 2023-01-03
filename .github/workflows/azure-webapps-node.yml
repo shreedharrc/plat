@@ -23,15 +23,15 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "testa10"
+      appID: "test"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-accounta10" 
-      cosdb-name : "cosdba10"
+      cosdb-account-name : "cosdb-account" 
+      cosdb-name : "cosdb"
       mongo-serv-version: "3.6"
-      storage-account : "blobstorea10"
+      storage-account : "blobstore"
       priv-zoneName : "privatelink.documents.azure.com"
-      zoneName : "my-zone" 
+      zoneName : "priv-zone" 
     steps:
     
       # Checkout code
@@ -100,13 +100,13 @@ jobs:
           failOnStdErr: false
           
           
-      # service connection creation on backend-subnet
+      # service connection creation on backend-subnet for cosmos db
       - name: Azure service connection creation on backend-subnet
         uses: Azure/cli@v1
         with:
           # Specify the script here
           inlineScript:
-            az network vnet subnet update --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --name backend-subnet --service-endpoints "Microsoft.Storage"
+            az network vnet subnet update --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --name backend-subnet --service-endpoints "Microsoft.AzureCosmosDB"
       
           
           
