@@ -82,7 +82,7 @@ jobs:
           inlineScript: | 
             az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB --capabilities EnableAggregationPipeline --default-consistency-level "Strong"
             az cosmosdb database create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --db-name ${{ env.cosdb-name }} --throughput 400  
-
+            
       # Deploy vnet spoke.............
       - name: Deploy Spoke vNet infrastructure 
         uses: azure/arm-deploy@v1
@@ -112,10 +112,12 @@ jobs:
         with:
           # Specify the script here
           inlineScript: | 
+                az cosmosdb network-rule add --subnet backend-subnet --ignore-missing-endpoint true --name ${{ env.cosdb-account-name }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-ids MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
                 az network private-dns zone create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name ${{ env.zoneName }}  
                 az network private-dns link vnet create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --zone-name  ${{ env.zoneName }} --name myzonelink --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --registration-enabled false 
                 az network private-endpoint dns-zone-group create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --endpoint-name  Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name "MyPrivateZoneGroup" --private-dns-zone ${{ env.zoneName }}   --zone-name "myzone"          
+    
     # Vnet Intergration and enabling service connection to Blob storage and backend vnet 
       - name: Vnet Intergration and enabling service connection to Blob storage and backend vnet 
         uses: Azure/cli@v1
@@ -149,10 +151,10 @@ jobs:
           # Specify the script here
           inlineScript: |
              az webapp config access-restriction add --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name wapp-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --action Deny --ip-address 0.0.0.0/32 --priority 100 --vnet-resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}
-             az webapp config access-restriction add --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name wapp-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --action Allow --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-hub --subnet gateway-subnet --priority 99 rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}
+             az webapp config access-restriction add --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name wapp-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --action Allow --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-hub --subnet gateway-subnet --priority 99 --vnet-resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}
       
       # Add Vnet Integration
-      - name: Azure CLI Action to Restrict Access
+      - name: Azure CLI Action to Vnet-Integration
         uses: Azure/cli@v1
         with:
           # Specify the script here
