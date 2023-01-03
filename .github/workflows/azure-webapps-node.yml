@@ -80,7 +80,7 @@ jobs:
         with:
           # Specify the script here
           inlineScript: | 
-            az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB --capabilities EnableAggregationPipeline --default-consistency-level "Strong"
+            az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB --capabilities EnableAggregationPipeline --default-consistency-level "Strong" --enable-virtual-network
             az cosmosdb database create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --db-name ${{ env.cosdb-name }} --throughput 400  
             
       # Deploy vnet spoke.............
@@ -112,7 +112,8 @@ jobs:
         with:
           # Specify the script here
           inlineScript: | 
-                az cosmosdb network-rule add --subnet backend-subnet --ignore-missing-endpoint true --name ${{ env.cosdb-account-name }}
+                svcEndpoint=$(az network vnet subnet show --resource-group $resourceGroup --name $backEnd --vnet-name $vNet --query 'id' -o tsv)
+                az cosmosdb network-rule add --name ${{ env.cosdb-account-name }} --subnet $svcEndpoint --ignore-missing-vnet-service-endpoint true
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-ids MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
                 az network private-dns zone create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name ${{ env.zoneName }}  
                 az network private-dns link vnet create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --zone-name  ${{ env.zoneName }} --name myzonelink --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --registration-enabled false 
