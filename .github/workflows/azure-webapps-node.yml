@@ -80,7 +80,7 @@ jobs:
         with:
           # Specify the script here
           inlineScript: | 
-            az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB --capabilities EnableAggregationPipeline --default-consistency-level "Strong" --enable-public-network true
+            az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB  --default-consistency-level "Strong" --capabilities EnableServerless
             az cosmosdb database create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --db-name ${{ env.cosdb-name }} --throughput 400  
             
       # Deploy vnet spoke.............
