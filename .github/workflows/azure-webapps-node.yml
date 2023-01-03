@@ -23,12 +23,12 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "testa5"
+      appID: "testa6"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-accounta5" 
-      cosdb-name : "cosdba5"
-      storage-account : "blobstorea5"
+      cosdb-account-name : "cosdb-accounta6" 
+      cosdb-name : "cosdba6"
+      storage-account : "blobstorea6"
       zoneName : "privatelink.documents.azure.com"
 
     steps:
