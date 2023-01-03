@@ -112,7 +112,7 @@ jobs:
         with:
           # Specify the script here
           inlineScript: | 
-                az cosmosdb network-rule add --subnet backend-subnet --ignore-missing-endpoint true --name ${{ env.cosdb-account-name }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke
+                az cosmosdb network-rule add --subnet backend-subnet --ignore-missing-endpoint true --name ${{ env.cosdb-account-name }}
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-ids MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
                 az network private-dns zone create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name ${{ env.zoneName }}  
                 az network private-dns link vnet create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --zone-name  ${{ env.zoneName }} --name myzonelink --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --registration-enabled false 
