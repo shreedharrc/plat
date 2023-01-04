@@ -23,15 +23,15 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test2"
+      appID: "test"
       sku: "B1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-account2" 
-      cosdb-name : "cosdb2"
+      cosdb-account-name : "cosdb-account" 
+      cosdb-name : "cosdb"
       mongo-serv-version: "3.6"
-      storage-account : "blobstore2"
+      storage-account : "blobstore"
       priv-zoneName : "privatelink.documents.azure.com"
-      zoneName : "priv-zone2" 
+      zoneName : "priv-zone" 
     steps:
     
       # Checkout code
@@ -130,8 +130,25 @@ jobs:
                 az cosmosdb network-rule add --name ${{ env.cosdb-account-name }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --subnet $svcEndpoint --ignore-missing-vnet-service-endpoint true
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-id MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}-blob --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.Storage/storageAccounts/${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }}" --group-id blob  --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-storage-${{env.appID}}
+      
+      
+      # Private-DNS cosmos-db and Blob-storage
+      - name: Azure Private-endpoint Cosmos-db creation
+        uses: Azure/cli@v1
+        with:
+          # Specify the script here
+          inlineScript: |          
+                az network private-dns zone create --name "privatelink.blob.core.windows.net" -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}
+                az network private-dns link vnet create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --zone-name "privatelink.blob.core.windows.net" --name ${{ env.zoneName }} --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --registration-enabled false
+                private_dns_link_id=$(az network private-dns link vnet show --name ${{ env.zoneName }} --zone-name "privatelink.blob.core.windows.net" -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --query "id" --output tsv)
 
-            
+                str_acc_id=$(az storage account show --name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --query "id" --output tsv)
+                az network private-link-resource list --id $str_acc_id
+                storage_private_endpoint_id=$(az network private-endpoint show --name  Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}-blob -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --query id -o tsv)
+                network_interface_id=$(az network private-endpoint show --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}-blob -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --query 'networkInterfaces[0].id' -o tsv)
+                storage_network_interface_private_ip=$(az resource show --ids $network_interface_id --api-version 2019-04-01 --query 'properties.ipConfigurations[0].properties.privateIPAddress' --output tsv)
+                az network private-dns record-set a add-record -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --record-set-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --zone-name privatelink.blob.core.windows.net --ipv4-address $storage_network_interface_private_ip
+
        # this step to configuire App Service...
           
    
