@@ -23,15 +23,15 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test"
+      appID: "test1"
       sku: "F1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-account" 
-      cosdb-name : "cosdb"
+      cosdb-account-name : "cosdb-account1" 
+      cosdb-name : "cosdb1"
       mongo-serv-version: "3.6"
-      storage-account : "blobstore"
+      storage-account : "blobstore1"
       priv-zoneName : "privatelink.documents.azure.com"
-      zoneName : "priv-zone" 
+      zoneName : "priv-zone1" 
     steps:
     
       # Checkout code
@@ -118,8 +118,8 @@ jobs:
           inlineScript: | 
             svcEndpoint=$(az network vnet subnet show --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name backend-subnet --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --query 'id' -o tsv)
             az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB --server-version ${{ env.mongo-serv-version }} --default-consistency-level "Strong" --enable-virtual-network true --virtual-network-rules $svcEndpoint
-            az cosmosdb mongodb database create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --db-name ${{ env.cosdb-name }} 
-            
+            az cosmosdb mongodb database create --account-name ${{ env.cosdb-account-name }} --name ${{ env.cosdb-name }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}
+
      # Private-endpoint cosmos-db
       - name: Azure Private-endpoint Cosmos-db creation
         uses: Azure/cli@v1
