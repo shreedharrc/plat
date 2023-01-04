@@ -23,15 +23,15 @@ jobs:
       type: "internal"
       Appplicationtype: "porta2"
       envtype: "dev"
-      appID: "test"
-      sku: "F1"
+      appID: "test1"
+      sku: "B1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-account" 
-      cosdb-name : "cosdb2"
+      cosdb-account-name : "cosdb-account1" 
+      cosdb-name : "cosdb1"
       mongo-serv-version: "3.6"
-      storage-account : "blobstore"
+      storage-account : "blobstore1"
       priv-zoneName : "privatelink.documents.azure.com"
-      zoneName : "priv-zone" 
+      zoneName : "priv-zone1" 
     steps:
     
       # Checkout code
