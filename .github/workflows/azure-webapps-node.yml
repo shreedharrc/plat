@@ -21,17 +21,17 @@ jobs:
       Applicationname: "website"
       ResourceGroupLocation: "eastus"
       type: "internal"
-      Appplicationtype: "porta2"
+      Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test1"
+      appID: "test2"
       sku: "B1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-account1" 
-      cosdb-name : "cosdb1"
+      cosdb-account-name : "cosdb-account2" 
+      cosdb-name : "cosdb2"
       mongo-serv-version: "3.6"
-      storage-account : "blobstore1"
+      storage-account : "blobstore2"
       priv-zoneName : "privatelink.documents.azure.com"
-      zoneName : "priv-zone1" 
+      zoneName : "priv-zone2" 
     steps:
     
       # Checkout code
@@ -120,7 +120,7 @@ jobs:
             az cosmosdb create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --name ${{ env.cosdb-account-name }} --kind MongoDB --server-version ${{ env.mongo-serv-version }} --default-consistency-level "Strong" --enable-virtual-network true --virtual-network-rules $svcEndpoint
             az cosmosdb mongodb database create --account-name ${{ env.cosdb-account-name }} --name ${{ env.cosdb-name }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}
 
-     # Private-endpoint cosmos-db
+     # Private-endpoint cosmos-db and Blob-storage
       - name: Azure Private-endpoint Cosmos-db creation
         uses: Azure/cli@v1
         with:
@@ -128,8 +128,9 @@ jobs:
           inlineScript: | 
                 svcEndpoint=$(az network vnet subnet show --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --name backend-subnet --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --query 'id' -o tsv)
                 az cosmosdb network-rule add --name ${{ env.cosdb-account-name }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --subnet $svcEndpoint --ignore-missing-vnet-service-endpoint true
-                az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-ids MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
-                
+                az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-id MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
+                az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}-blob --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.Storage/storageAccounts/${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }}" --group-id blob  --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-storage-${{env.appID}}
+
             
        # this step to configuire App Service...
           
