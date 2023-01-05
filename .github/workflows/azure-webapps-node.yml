@@ -23,14 +23,14 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test4"
+      appID: "test"
       sku: "B1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-account4" 
-      cosdb-name : "cosdb4"
+      cosdb-account-name : "cosdb-account" 
+      cosdb-name : "cosdb"
       mongo-serv-version: "3.6"
-      storage-account : "blobstore4"
-      zoneName : "priv-zone4" 
+      storage-account : "blobstore"
+      zoneName : "priv-zone" 
     steps:
     
       # Checkout code
