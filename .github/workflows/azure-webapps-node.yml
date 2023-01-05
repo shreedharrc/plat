@@ -23,14 +23,14 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test1"
+      appID: "test"
       sku: "B1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-account1" 
-      cosdb-name : "cosdb1"
+      cosdb-account-name : "cosdb-account" 
+      cosdb-name : "cosdb"
       mongo-serv-version: "3.6"
-      storage-account : "blobstore1"
-      zoneName : "priv-zone1" 
+      storage-account : "blobstore"
+      zoneName : "priv-zone" 
     steps:
     
       # Checkout code
@@ -86,7 +86,6 @@ jobs:
           failOnStdErr: false
           
           
-      
           
       # Deploy vnet hub............
       - name: Deploy Hub vNet infrastructure 
@@ -130,20 +129,7 @@ jobs:
                 az network private-endpoint create --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --vnet-name vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet backend-subnet  --private-connection-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}}/providers/Microsoft.DocumentDB/databaseAccounts/${{ env.cosdb-account-name }}" --group-id MongoDB --connection-name priv-conn-${{ env.companybbr }}-${{ env.envtype }}-cosmosdb-${{env.appID}}
       
       
-      # Private-DNS cosmos-db and Blob-storage
-      - name: Azure Private-endpoint Cosmos-db creation
-        uses: Azure/cli@v1
-        with:
-          # Specify the script here
-          inlineScript: |          
-                az network private-dns zone create --name "privatelink.documents.azure.com" -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}
-                az network private-dns link vnet create --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --zone-name "privatelink.documents.azure.com" --name ${{ env.zoneName }} --virtual-network vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --registration-enabled false
-                private_dns_link_id=$(az network private-dns link vnet show --name ${{ env.zoneName }} --zone-name "privatelink.documents.azure.com" -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --query "id" --output tsv)
-                storage_private_endpoint_id=$(az network private-endpoint show --name  Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --query id -o tsv)
-                network_interface_id=$(az network private-endpoint show --name Priv-Endpoint-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --query 'networkInterfaces[0].id' -o tsv)
-                storage_network_interface_private_ip=$(az resource show --ids $network_interface_id --api-version 2019-04-01 --query 'properties.ipConfigurations[0].properties.privateIPAddress' --output tsv)
-                az network private-dns record-set a add-record -g rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}} --record-set-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --zone-name privatelink.documents.azure.com --ipv4-address $storage_network_interface_private_ip
-
+     
        # this step to configuire App Service...
           
    
