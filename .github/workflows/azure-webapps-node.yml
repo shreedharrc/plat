@@ -23,14 +23,14 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test"
+      appID: "test1"
       sku: "B1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-account" 
-      cosdb-name : "cosdb"
+      cosdb-account-name : "cosdb-account1" 
+      cosdb-name : "cosdb1"
       mongo-serv-version: "3.6"
-      storage-account : "blobstore"
-      zoneName : "priv-zone" 
+      storage-account : "blobstore1"
+      zoneName : "priv-zone1" 
     steps:
     
       # Checkout code
@@ -176,7 +176,6 @@ jobs:
           # Specify the script here
           inlineScript:
              az webapp vnet-integration add -g rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} -n wapp-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --vnet /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}/providers/Microsoft.Network/virtualNetworks/vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}/providers/Microsoft.Network/virtualNetworks/vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke/subnets/appsrv-subnet
-             az webapp config appsettings set --name vnet-route --settings WEBSITE_VNET_ROUTE_ALL=1  WEBSITE_DNS_SERVER 168.63.129.16
 
      
         
