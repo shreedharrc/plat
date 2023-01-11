@@ -23,15 +23,15 @@ jobs:
       type: "internal"
       Appplicationtype: "portal"
       envtype: "dev"
-      appID: "test2"
+      appID: "test3"
       sku: "B1"
       linuxFxVersion : "node|14-lts"
-      cosdb-account-name : "cosdb-account2" 
-      cosdb-name : "cosdb2"
+      cosdb-account-name : "cosdb-account3" 
+      cosdb-name : "cosdb3"
       mongo-serv-version: "3.6"
-      storage-account : "blobstore2"
-      zoneName : "priv-zone2" 
-      Func-app-name : "test-func"
+      storage-account : "blobstore3"
+      zoneName : "priv-zone3" 
+      Func-app-name : "test-func3"
     steps:
     
       # Checkout code
@@ -171,7 +171,7 @@ jobs:
         with:
           # Specify the script here
           inlineScript:
-             az functionapp create --name ${{ env.Func-app-name }} --storage-account ${{ env.storage-account }} --consumption-plan-location ${{ env.ResourceGroupLocation }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --functions-version 4 
+             az functionapp create --name ${{ env.Func-app-name }} --storage-account ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --consumption-plan-location ${{ env.ResourceGroupLocation }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --functions-version 4 
 
           
       
