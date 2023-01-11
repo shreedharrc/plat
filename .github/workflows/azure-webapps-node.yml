@@ -74,7 +74,16 @@ jobs:
           inlineScript: |
             az storage account create --name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --location ${{ env.ResourceGroupLocation }} --sku Standard_ZRS
             az storage container create --name container-${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --account-name ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }}       
-       
+      
+      # Create Azure Function App
+      - name: Azure CLI Action to create Azure Function App
+        uses: Azure/cli@v1
+        with:
+          # Specify the script here
+          inlineScript:
+             az functionapp create --name ${{ env.Func-app-name }} --storage-account ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --consumption-plan-location ${{ env.ResourceGroupLocation }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --functions-version 4 
+
+           
       
       # Deploy vnet spoke.............
       - name: Deploy Spoke vNet infrastructure 
@@ -165,13 +174,5 @@ jobs:
              az webapp vnet-integration add -g rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} -n wapp-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --vnet /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}/providers/Microsoft.Network/virtualNetworks/vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke --subnet /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-${{ env.companybbr }}-${{ env.envtype }}-security-${{env.appID}}/providers/Microsoft.Network/virtualNetworks/vnet-${{ env.companybbr }}-${{ env.envtype }}-spoke/subnets/appsrv-subnet
 
      
-           # Create Azure Function App
-      - name: Azure CLI Action to create Azure Function App
-        uses: Azure/cli@v1
-        with:
-          # Specify the script here
-          inlineScript:
-             az functionapp create --name ${{ env.Func-app-name }} --storage-account ${{ env.storage-account }}${{ env.companybbr }}${{ env.envtype }} --consumption-plan-location ${{ env.ResourceGroupLocation }} --resource-group rg-${{ env.companybbr }}-${{ env.envtype }}-website-${{env.appID}} --functions-version 4 
-
-          
+           
       
